@@ -55,18 +55,19 @@ const exportInvestmentHandler = async (req, res) => {
       })
     })
 
-    converter.json2csv(csvData, (e, csv) => {
+    converter.json2csv(csvData, async (e, csv) => {
       if (e) {
         throw e
       }
 
-      res.send(csv)
+      await axios.post(`${investmentsServiceUrl}/investments/export`, {csv})
+
+      res.sendStatus(204)
     })
   } catch (e) {
     console.error(e)
-    res.sendStatus(e)
+    res.sendStatus(500)
   }
-
 }
 
 module.exports = {
