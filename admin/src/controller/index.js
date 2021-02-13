@@ -1,8 +1,10 @@
 const axios = require("axios")
 const config = require("config")
+const converter = require("json-2-csv")
 
 const {
   investmentsServiceUrl,
+  companyServiceUrl,
 } = config
 
 const getInvestmentHandler = (req, res) => {
@@ -17,20 +19,54 @@ const getInvestmentHandler = (req, res) => {
     })
 }
 
-const exportInvestmentHandler = (req, res) => {
+const exportInvestmentHandler = async (req, res) => {
   const {
     investmentId,
   } = req.params
 
-  res.send(investmentId)
-  // request.get(`${investmentsServiceUrl}/investments/${investmentId}`, (e, r, investments) => {
-  //   if (e) {
-  //     console.error(e)
-  //     res.send(500)
-  //   } else {
-  //     res.send(investments)
-  //   }
-  // })
+  try {
+    const {data: investment} = await axios.get(`${investmentsServiceUrl}/investments/${investmentId}`)
+
+    const {
+      holdings,
+      userId,
+      firstName,
+      lastName,
+      investmentTotal,
+      date,
+    } = investment[0]
+
+    for (const holding of holdings) {
+      const {data: company} = await axios.get(`${companyServiceUrl}/companies/${holding.id}`)
+      holding.name = company.name
+    }
+
+    const csvData = []
+
+
+    holdings.map(holding => {
+      csvData.push({
+        User: userId,
+        "First Name": firstName,
+        "Last Name": lastName,
+        Date: date,
+        Holding: holding.name,
+        Value: holding.investmentPercentage * investmentTotal,
+      })
+    })
+
+    converter.json2csv(csvData, (e, csv) => {
+      if (e) {
+        throw e
+      }
+
+      res.send(csv)
+    })
+  } catch (e) {
+    console.error(e)
+    res.sendStatus(e)
+  }
+
 }
 
 module.exports = {
