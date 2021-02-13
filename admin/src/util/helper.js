@@ -1,7 +1,6 @@
 const converter = require("json-2-csv")
 
 const csvService = (data, cb) => {
-  console.log(data)
   converter.json2csv(data, (e, csv) => {
     if (e) {
       throw e

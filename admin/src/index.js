@@ -1,25 +1,16 @@
 const express = require("express")
 const bodyParser = require("body-parser")
-const cors = require("cors")
 const config = require("config")
-const routes = require("./route")
 
+const secureApp = require("./secure")
 const {
   apiRoutes,
-} = routes
+} = require("./route")
 
 const app = express()
-
-/**
- * cors enabled for specific domain
- * const corsOptsion = {
- *  origin: "http://localhost"
- * }
-*/
-
-app.use(cors())
 app.use(bodyParser.json({limit: "10mb"}))
 
+secureApp(app)
 apiRoutes(app)
 
 app.listen(config.port, (err) => {
