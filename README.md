@@ -92,6 +92,8 @@ Admin - localhost:8083
 
 Currently using Promise.all() to handle asynchronous request for numerous records.
 
+In case of millions of records, the code may throw timeout error because the Time complexity of `prepareCsvData` function is O(N^2). We can reduce this time complexity by redesigning database.
+
 ### What could be improved more?
 
 - integration test using `cucumber` or whatever library.
