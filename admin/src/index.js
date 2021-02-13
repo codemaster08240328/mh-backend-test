@@ -1,7 +1,8 @@
 const express = require("express")
 const bodyParser = require("body-parser")
-const routes = require("./route")
+const cors = require("cors")
 const config = require("config")
+const routes = require("./route")
 
 const {
   apiRoutes,
@@ -9,6 +10,14 @@ const {
 
 const app = express()
 
+/**
+ * cors enabled for specific domain
+ * const corsOptsion = {
+ *  origin: "http://localhost"
+ * }
+*/
+
+app.use(cors())
 app.use(bodyParser.json({limit: "10mb"}))
 
 apiRoutes(app)
