@@ -1,5 +1,5 @@
 const {expect} = require("chai")
-const {prepareCsvData, csvService} = require("../src/util/helper")
+const {prepareCsvData, csvService, prepareCSVDataForAll} = require("../src/util/helper")
 
 const MOCK_INVESTMENT_DATA = [
   {
@@ -28,6 +28,12 @@ const MOCK_INVESTMENT_DATA = [
     ],
   },
 ]
+
+const MOCK_COMPANY_ID_NAME = {
+  1: "The Big Investment Company",
+  2: "The Big Investment Company 2",
+  3: "The Big Investment Company 3",
+}
 
 const EXPECTED_OUTPUT_FOR_CSV = [
   {
@@ -64,6 +70,11 @@ describe("helper", () => {
   it("prepareCsvData function works!", () => {
     const result = prepareCsvData(MOCK_INVESTMENT_DATA)
     resultFromPrepareCsvData = result
+    expect(result).to.deep.equal(EXPECTED_OUTPUT_FOR_CSV)
+  })
+
+  it("prepareCSVDataForAll function works!", () => {
+    const result = prepareCSVDataForAll(MOCK_INVESTMENT_DATA, MOCK_COMPANY_ID_NAME)
     expect(result).to.deep.equal(EXPECTED_OUTPUT_FOR_CSV)
   })
 

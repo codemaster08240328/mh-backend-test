@@ -1,39 +1,38 @@
-const axios = require("axios")
-const config = require("config")
+const Investments = require("../services/Investments")
+const Companies = require("../services/Companies")
+
 const {
   csvService,
   prepareCsvData,
+  prepareCSVDataForAll,
 } = require("../util/helper")
 
-const {
-  investmentsServiceUrl,
-  companyServiceUrl,
-} = config
+const investments = new Investments()
+const companies = new Companies()
 
-const getInvestmentHandler = (req, res) => {
+const getInvestmentHandler = async (req, res) => {
   const {id} = req.params
-  axios.get(`${investmentsServiceUrl}/investments/${id}`)
-    .then(resp => {
-      res.send(resp.data)
-    })
-    .catch((e) => {
-      console.error(e)
-      res.sendStatus(500)
-    })
+  try {
+    const data = await investments.fetchInvestmentById(id)
+    res.send(data)
+  } catch (e) {
+    console.error(e)
+    res.sendStatus(500)
+  }
 }
 
-const exportInvestmentHandler = async (req, res) => {
+const exportInvestmentByIdHandler = async (req, res) => {
   const {
     investmentId,
   } = req.params
 
   try {
-    const {data: investments} = await axios.get(`${investmentsServiceUrl}/investments/${investmentId}`)
+    const investmentsData = await investments.fetchInvestmentById(investmentId)
     const promises = []
 
-    investments.map(investment => {
+    investmentsData.map(investment => {
       investment.holdings.map(holding => {
-        const promise = axios.get(`${companyServiceUrl}/companies/${holding.id}`)
+        const promise = companies.fetchCompanyById(holding.id)
           .then(res => {
             holding.name = res.data.name
           })
@@ -47,9 +46,9 @@ const exportInvestmentHandler = async (req, res) => {
 
     await Promise.all(promises)
 
-    const csvData = prepareCsvData(investments)
+    const csvData = prepareCsvData(investmentsData)
     csvService(csvData, async (csv) => {
-      await axios.post(`${investmentsServiceUrl}/investments/export`, {csv})
+      await investments.exportInvestment(csv)
       res.sendStatus(204)
     })
   } catch (e) {
@@ -58,7 +57,25 @@ const exportInvestmentHandler = async (req, res) => {
   }
 }
 
+const exportAllInvestmentsHandler = async (req, res) => {
+  try {
+    await companies.fetchCompanies()
+    await investments.fetchInvestments()
+
+    const csvData = prepareCSVDataForAll(investments.invesments, companies.names)
+
+    csvService(csvData, async (csv) => {
+      await investments.exportInvestment(csv)
+      res.sendStatus(204)
+    })
+  } catch (e) {
+    console.log(e)
+    res.sendStatus(500)
+  }
+}
+
 module.exports = {
   getInvestmentHandler,
-  exportInvestmentHandler,
+  exportInvestmentByIdHandler,
+  exportAllInvestmentsHandler,
 }

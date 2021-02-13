@@ -1,9 +1,11 @@
 const {
   getInvestmentHandler,
-  exportInvestmentHandler,
+  exportInvestmentByIdHandler,
+  exportAllInvestmentsHandler,
 } = require("./investment")
 
 module.exports = {
   getInvestmentHandler,
-  exportInvestmentHandler,
+  exportInvestmentByIdHandler,
+  exportAllInvestmentsHandler,
 }
