@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "develop": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run unit-test",
+    "unit-test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -26,12 +27,14 @@
   "dependencies": {
     "axios": "^0.21.1",
     "body-parser": "^1.19.0",
+    "chai": "^4.3.0",
     "config": "^3.3.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "helmet": "^4.4.1",
     "json-2-csv": "^3.10.2",
+    "mocha": "^8.3.0",
     "ramda": "^0.27.1",
     "request": "^2.88.2"
   }

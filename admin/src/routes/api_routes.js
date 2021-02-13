@@ -1,4 +1,4 @@
-const controller = require("./controller")
+const controller = require("../controller")
 
 const {
   getInvestmentHandler,
@@ -11,6 +11,4 @@ const apiRoutes = (app) => {
   app.post("/investments/export/:investmentId", exportInvestmentHandler)
 }
 
-module.exports = {
-  apiRoutes,
-}
+module.exports = apiRoutes

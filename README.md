@@ -77,3 +77,23 @@ Admin - localhost:8083
 
 - `/investments/:id` get an investment record by id
 - `/investments/export/:investmentId` report csv data for a specific investment record by investmentId.
+
+## What could be improved?
+
+### Secure
+
+- Endpoint could be authenticated using `passport` or whatever token library.
+- Endpoint parameters could be validated using validation library like `Joi`.
+- Secure cookie could be possible.
+- Could prevent SQL Injection vulnerabilities.
+- Could use `csurf` middleware to protect against cross-site request forgery.
+
+### Scale to millions of records?
+
+Currently using Promise.all() to handle asynchronous request for numerous records.
+
+### What could be improved more?
+
+- integration test using `cucumber` or whatever library.
+- Docker containerization for handling microservices.
+- Dynamic configuration handling for various environment like dev, prod.

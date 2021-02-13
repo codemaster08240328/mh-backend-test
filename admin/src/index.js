@@ -1,17 +1,5 @@
-const express = require("express")
-const bodyParser = require("body-parser")
 const config = require("config")
-
-const secureApp = require("./secure")
-const {
-  apiRoutes,
-} = require("./route")
-
-const app = express()
-app.use(bodyParser.json({limit: "10mb"}))
-
-secureApp(app)
-apiRoutes(app)
+const app = require("./app")
 
 app.listen(config.port, (err) => {
   if (err) {
