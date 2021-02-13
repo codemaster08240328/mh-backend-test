@@ -77,6 +77,7 @@ Admin - localhost:8083
 
 - `/investments/:id` get an investment record by id
 - `/investments/export/:investmentId` report csv data for a specific investment record by investmentId.
+- `/investments/export` report csv data for all investments record.
 
 ## What could be improved?
 
